@@ -6,32 +6,37 @@ const tokens = (n) => {
 };
 
 describe("Token", () => {
-    let token;
-    const name = "Night^^Stalker";
-    const symbol = "N^^S";
-    const decimals = '18';
-    const totalSupply = "1000000";
+    let token, accounts, deployer
+    const name = "Night^^Stalker"
+    const symbol = "N^^S"
+    const decimals = '18'
+    const totalSupply = tokens(1000000)
 
     beforeEach(async () => {
-        const Token = await ethers.getContractFactory("Token");
-        token = await Token.deploy(name, symbol, totalSupply);
+        const Token = await ethers.getContractFactory("Token")
+        token = await Token.deploy(name, symbol, totalSupply)
+        accounts = await ethers.getSigners()
+        deployer = accounts[0]
     });
 
     describe("Deployment", () => {
         it("has a correct name", async () => {
-            expect(await token.name()).to.equal(name);
-        });
+            expect(await token.name()).to.equal(name)
+        })
 
         it("has a correct symbol", async () => {
-            expect(await token.symbol()).to.equal(symbol);
-        });
+            expect(await token.symbol()).to.equal(symbol)
+        })
 
         it("has a correct decimals", async () => {
-            expect(await token.decimals()).to.equal(decimals);
-        });
+            expect(await token.decimals()).to.equal(decimals)
+        })
 
         it("has a correct total supply", async () => {
-            expect(await token.totalSupply()).to.equal(tokens(totalSupply));
-        });
+            expect(await token.totalSupply()).to.equal(totalSupply)
+        })
+        it("assigns total supply to deployer", async () => {
+            expect(await token.balanceOf(deployer.address)).to.equal(totalSupply)
+        })
     });
 });
